@@ -4,17 +4,46 @@ using UnityEngine;
 
 public class BallBehaviour : MonoBehaviour
 {
+     #region SlowMotion
+     // Switch for SlowMotion
+     public bool isSlowMotion = false;
+
      /// <summary>
      /// Slowmotion effect factor.
      /// </summary>
      public float slowFactor = 2.0f;
+     private float elapsedTime = 0.0f;
+     private bool isSlowedDown = false;
+     private float rotationPerSecond = 180;
 
-     public float elapsedTime = 0.0f;
-     public bool isSlowMotion = false;
-     public float rotation = 180;
+     public void SlowMotion()
+     {
+          elapsedTime += Time.deltaTime;
 
-     // Start is called before the first frame update
-     void Start()
+          if (isSlowedDown && elapsedTime >= 1.0f * slowFactor)
+          {
+               elapsedTime = 0.0f;
+               isSlowedDown = false;
+               rotationPerSecond = 180;
+          }
+          else if (!isSlowedDown && elapsedTime >= 1.0f)
+          {
+               elapsedTime = 0.0f;
+               isSlowedDown = true;
+               rotationPerSecond = 180 / slowFactor;
+          }
+
+          transform.Rotate(Vector3.up, rotationPerSecond * Time.deltaTime);
+     }
+     #endregion
+
+     public float XRotation = 0;
+     public float YRotation = 1;
+     public float ZRotation = 0;
+     public float DegreesPerSecond = 180;
+
+    // Start is called before the first frame update
+    void Start()
     {
         
     }
@@ -22,21 +51,9 @@ public class BallBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-          elapsedTime += Time.deltaTime;
+          if (isSlowMotion) SlowMotion();
 
-          if (isSlowMotion && elapsedTime >= 1.0f * slowFactor)
-          {
-               elapsedTime = 0.0f;
-               isSlowMotion = false;
-               rotation = 180;
-          }
-          else if (!isSlowMotion && elapsedTime >= 1.0f)
-          {
-               elapsedTime = 0.0f;
-               isSlowMotion = true;
-               rotation = 180 / slowFactor;
-          }
-
-          transform.Rotate(Vector3.up, rotation * Time.deltaTime);
-    }
+          Vector3 axis = new Vector3(XRotation, YRotation, ZRotation);
+          transform.Rotate(axis, DegreesPerSecond * Time.deltaTime);
+     }
 }
