@@ -6,11 +6,8 @@ public class BallBehaviour : MonoBehaviour
 {
      #region SlowMotion
      // Switch for SlowMotion
-     public bool isSlowMotion = false;
-
-     /// <summary>
-     /// Slowmotion effect factor.
-     /// </summary>
+     public bool UseSlowMotion = false;
+     // Slowmotion effect factor.
      public float slowFactor = 2.0f;
      private float elapsedTime = 0.0f;
      private bool isSlowedDown = false;
@@ -45,15 +42,17 @@ public class BallBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+          
     }
 
     // Update is called once per frame
     void Update()
     {
-          if (isSlowMotion) SlowMotion();
+          if (UseSlowMotion) SlowMotion();
 
           Vector3 axis = new Vector3(XRotation, YRotation, ZRotation);
-          transform.Rotate(axis, DegreesPerSecond * Time.deltaTime);
+          //transform.Rotate(axis, DegreesPerSecond * Time.deltaTime);
+          transform.RotateAround(Vector3.zero, axis, DegreesPerSecond * Time.deltaTime);
+          Debug.DrawRay(this.transform.position, axis, Color.yellow, .1f);
      }
 }
